@@ -4,6 +4,8 @@ const http = require("http");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const { Server } = require("socket.io");
+require("dotenv").config();
+const PORT = process.env.PORT || 5000;
 
 
 const app = express();
@@ -124,6 +126,6 @@ socket.on("location-update", (data) =>
   });
 });
 
-server.listen(5000, () => {
-  console.log("Server running on http://localhost:5000");
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
