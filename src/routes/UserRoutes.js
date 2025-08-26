@@ -6,4 +6,4 @@ const userRoutes = Router();
 
 userRoutes.post("/add-location", addLocation);
 
-export { userRoutes };
+export { userRoutes }; 
