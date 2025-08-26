@@ -2,7 +2,6 @@ import express from "express";
 import db from "./src/config/dbconnect.js";
 import http from "http";
 import cors from "cors";
-import mongoose from "mongoose";
 import { Server } from "socket.io";
 import { userRoutes } from "./src/routes/UserRoutes.js";
 import dotenv from "dotenv";
