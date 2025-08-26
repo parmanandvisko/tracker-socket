@@ -3,8 +3,11 @@ import { LocationModel } from "../models/LocationModel.js";
 const addLocation = async (req, res) => {
   try {
 
-
-    return req.body;
+ return res.status(500).send({
+      message: "successssss test",
+      data:req.body
+    });
+  
     const {
       lt_user_id,
       lt_name,
