@@ -28,7 +28,7 @@ app.use("/api/user/", userRoutes);
 const users = {}; // username: socketId
 
 io.on("connection", (socket) => {
-  console.log("socket connected");
+  console.log("socket connected",socket.id);
 
   // JOIN-USER
   socket.on("join", (username) => {

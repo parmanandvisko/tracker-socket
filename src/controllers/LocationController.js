@@ -3,10 +3,10 @@ import { LocationModel } from "../models/LocationModel.js";
 const addLocation = async (req, res) => {
   try {
 
- return res.status(500).send({
-      message: "successssss test",
-      data:req.body
-    });
+//  return res.status(200).send({
+//       message: "successssss test",
+//       data:req.body
+//     });
   
     const {
       lt_user_id,
@@ -34,13 +34,14 @@ const addLocation = async (req, res) => {
     const data = await result.save();
     console.log(data);
 
-    // if (data) {
-    //   return res.status(201).send({
-    //     product: data,
-    //     message: "Location added successfully",
-    //     status: 201,
-    //   });
-    // }
+
+    if (data) {
+      return res.status(201).send({
+        product: data,
+        message: "Location added successfully",
+        status: 201,
+      });
+    }
   } catch (err) {
     return res.status(500).send({
       message: err.message || "Internal Server Error",
