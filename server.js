@@ -39,6 +39,7 @@ io.on("connection", (socket) => {
 
   // LOCATION UPDATE
   socket.on("location-update", (data) => {
+    console.log(data,"testData")
   try {
 //        const data = {
 //     "lt_user_id":"85",
@@ -109,7 +110,6 @@ io.on("connection", (socket) => {
   }
   socket.emit("get-user-location",data)
 });
-
 
   // DISCONNECT USER
   socket.on("disconnect", () => {
