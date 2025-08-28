@@ -39,6 +39,18 @@ io.on("connection", (socket) => {
 
   // LOCATION UPDATE
   socket.on("location-update", (data) => {
+  try {
+//        const data = {
+//     "lt_user_id":"85",
+//       "lt_name":"demo_demo",
+//       "lt_latitude":1.1,
+//       "lt_longitude":1.1,
+//       "lt_app_time":"12",
+//       "lt_isInternetOn_Off":false,
+//       "lt_locationOn_off":false,
+//       "lt_location_permission":false
+// }
+
     const {
       lt_user_id,
       lt_name,
@@ -49,6 +61,10 @@ io.on("connection", (socket) => {
       lt_locationOn_off,
       lt_location_permission,
     } = data;
+
+
+
+    console.log("Received Location Data:", data);
 
     const sql = `
       INSERT INTO locations 
@@ -70,22 +86,30 @@ io.on("connection", (socket) => {
       ],
       (err, result) => {
         if (err) {
-          console.error("DB insert error:", err);
+          console.error("DB Insert Error:", err);
+          socket.emit("error-message", { message: "Failed to save location" });
           return;
         }
-        console.log("Location saved:", result.insertId);
 
-        // send live location to admin
-        io.emit("user-location", {
-          lt_user_id,
-          lt_name,
-          lt_latitude,
-          lt_longitude,
-          lt_app_time,
-        });
+        console.log("Location saved with ID:", result.insertId);
+
+        // // Broadcast to all admins or dashboard clients
+        // io.emit("user-location", {
+        //   lt_user_id,
+        //   lt_name,
+        //   lt_latitude,
+        //   lt_longitude,
+        //   lt_app_time,
+        // });
       }
     );
-  });
+  } catch (err) {
+    console.error("Unexpected Error:", err);
+    socket.emit("error-message", { message: "Internal server error" });
+  }
+  socket.emit("get-user-location",data)
+});
+
 
   // DISCONNECT USER
   socket.on("disconnect", () => {
