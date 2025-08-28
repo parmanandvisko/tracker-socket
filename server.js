@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
     console.log("Received Location Data:", data);
 
     const sql = `
-      INSERT INTO locations 
+      INSERT INTO location_tracker 
       (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
