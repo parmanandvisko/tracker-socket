@@ -38,6 +38,6 @@ const locationSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const LocationModel = mongoose.model("location", locationSchema);
+const LocationModel = mongoose.model("location_tracker", locationSchema);
 
 export { LocationModel };
