@@ -31,14 +31,30 @@ io.on("connection", (socket) => {
   console.log("socket connected",socket.id);
 
   // JOIN-USER
-  socket.on("join", (username) => {
-    users[username] = socket.id;
-    console.log(users, "users");
-    io.emit("online-users", Object.keys(users));
+  // socket.on("join", (username) => {
+  //   users[username] = socket.id;
+  //   console.log(users, "users");
+  //   io.emit("online-users", Object.keys(users));
+  // });
+
+
+
+   // JOIN USER
+  socket.on("join", ({ lt_user_id, lt_name }) => {
+    users[lt_user_id] = {
+      socketId: socket.id,
+      lt_name,
+      lt_latitude: null,
+      lt_longitude: null,
+      lastUpdated: null,
+    };
+
+    console.log("Active Users:", users);
+    io.emit("online-users", Object.values(users)); // send full object array
   });
 
   // LOCATION UPDATE
-  socket.on("location-update", (data) => {
+  socket.on("location-update", (data,ack) => {
     console.log(data,"testData")
   try {
 //        const data = {
@@ -86,13 +102,33 @@ io.on("connection", (socket) => {
         lt_location_permission,
       ],
       (err, result) => {
-        if (err) {
-          console.error("DB Insert Error:", err);
-          socket.emit("error-message", { message: "Failed to save location" });
-          return;
-        }
+       if (err) {
+  console.error("DB Insert Error:", err);
+  if (ack) ack({ status: "error", message: "DB insert failed" });
+  return;
+}
 
-        console.log("Location saved with ID:", result.insertId);
+
+
+
+        if (users[lt_user_id]) {
+        users[lt_user_id].lt_latitude = lt_latitude;
+        users[lt_user_id].lt_longitude = lt_longitude;
+        users[lt_user_id].lastUpdated = Date.now();
+      }
+
+
+
+       if (ack) {
+  ack({
+    status: "success",
+    message: "Location updated successfully",
+    userId: lt_user_id,
+    lat: lt_latitude,
+    lng: lt_longitude,
+  });
+}
+
 
         // // Broadcast to all admins or dashboard clients
         // io.emit("user-location", {
@@ -104,6 +140,11 @@ io.on("connection", (socket) => {
         // });
       }
     );
+
+
+
+
+
   } catch (err) {
     console.error("Unexpected Error:", err);
     socket.emit("error-message", { message: "Internal server error" });
@@ -112,15 +153,29 @@ io.on("connection", (socket) => {
 });
 
   // DISCONNECT USER
+  // socket.on("disconnect", () => {
+  //   for (const [username, id] of Object.entries(users)) {
+  //     if (id === socket.id) {
+  //       delete users[username];
+  //       break;
+  //     }
+  //   }
+  //   io.emit("online-users", Object.keys(users));
+  // });
+
+
   socket.on("disconnect", () => {
-    for (const [username, id] of Object.entries(users)) {
-      if (id === socket.id) {
-        delete users[username];
+    for (const [user_id, userObj] of Object.entries(users)) {
+      if (userObj.socketId === socket.id) {
+        delete users[user_id];
         break;
       }
     }
-    io.emit("online-users", Object.keys(users));
-  });
+
+      io.emit("online-users", Object.values(users));
+    });
+
+
 });
 
 server.listen(PORT, () => {
