@@ -122,6 +122,7 @@ io.on("connection", (socket) => {
        if (ack) {
   ack({
     status: "success",
+    "testing":data,
     message: "Location updated successfully",
     userId: lt_user_id,
     lat: lt_latitude,
