@@ -54,20 +54,98 @@ io.on("connection", (socket) => {
   });
 
   // LOCATION UPDATE
-  socket.on("location-update", (data,ack) => {
-    console.log(data,"testData")
-  try {
-//        const data = {
-//     "lt_user_id":"85",
-//       "lt_name":"demo_demo",
-//       "lt_latitude":1.1,
-//       "lt_longitude":1.1,
-//       "lt_app_time":"12",
-//       "lt_isInternetOn_Off":false,
-//       "lt_locationOn_off":false,
-//       "lt_location_permission":false
+//   socket.on("location-update", (data,ack) => {
+//     console.log(data,"testData")
+//   try {
+// //        const data = {
+// //     "lt_user_id":"85",
+// //       "lt_name":"demo_demo",
+// //       "lt_latitude":1.1,
+// //       "lt_longitude":1.1,
+// //       "lt_app_time":"12",
+// //       "lt_isInternetOn_Off":false,
+// //       "lt_locationOn_off":false,
+// //       "lt_location_permission":false
+// // }
+
+//     const {
+//       lt_user_id,
+//       lt_name,
+//       lt_latitude,
+//       lt_longitude,
+//       lt_app_time,
+//       lt_isInternetOn_Off,
+//       lt_locationOn_off,
+//       lt_location_permission,
+//     } = data;
+
+
+
+//     console.log("Received Location Data:", data);
+
+//     const sql = `
+//       INSERT INTO location_tracker 
+//       (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
+//       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+//     `;
+
+//     db.query(
+//       sql,
+//       [
+//         lt_user_id,
+//         lt_name,
+//         lt_latitude,
+//         lt_longitude,
+//         lt_app_time,
+//         lt_isInternetOn_Off,
+//         lt_locationOn_off,
+//         lt_location_permission,
+//       ],
+//       (err, result) => {
+//        if (err) {
+//   console.error("DB Insert Error:", err);
+//   if (ack) ack({ status: "error", message: "DB insert failed" });
+//   return;
 // }
 
+//         if (users[lt_user_id]) {
+//         users[lt_user_id].lt_latitude = lt_latitude;
+//         users[lt_user_id].lt_longitude = lt_longitude;
+//         users[lt_user_id].lastUpdated = Date.now();
+//       }
+
+
+
+//        if (ack) {
+//   ack({
+//     status: "success",
+//     "testing":data,
+//     message: "Location updated successfully",
+//     userId: lt_user_id,
+//     lat: lt_latitude,
+//     lng: lt_longitude,
+//   });
+// }
+//         // Broadcast to all admins or dashboard clients
+//         io.emit("user-location", {
+//           lt_user_id,
+//           lt_name,
+//           lt_latitude,
+//           lt_longitude,
+//           lt_app_time,
+//         });
+//       }
+//     );
+
+//   } catch (err) {
+//     console.error("Unexpected Error:", err);
+//     socket.emit("error-message", { message: "Internal server error" });
+//   }
+//   socket.emit("get-user-location",data)
+// });
+
+socket.on("location-update", (data, ack) => {
+  try {
     const {
       lt_user_id,
       lt_name,
@@ -79,16 +157,12 @@ io.on("connection", (socket) => {
       lt_location_permission,
     } = data;
 
-
-
-    console.log("Received Location Data:", data);
-
+    // Save in DB...
     const sql = `
       INSERT INTO location_tracker 
       (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `;
-
     db.query(
       sql,
       [
@@ -102,56 +176,50 @@ io.on("connection", (socket) => {
         lt_location_permission,
       ],
       (err, result) => {
-       if (err) {
-  console.error("DB Insert Error:", err);
-  if (ack) ack({ status: "error", message: "DB insert failed" });
-  return;
-}
+        if (err) {
+          console.error("DB Insert Error:", err);
+          if (ack) ack({ status: "error", message: "DB insert failed" });
+          return;
+        }
 
-
-
-
+        // update user cache
         if (users[lt_user_id]) {
-        users[lt_user_id].lt_latitude = lt_latitude;
-        users[lt_user_id].lt_longitude = lt_longitude;
-        users[lt_user_id].lastUpdated = Date.now();
-      }
+          users[lt_user_id].lt_latitude = lt_latitude;
+          users[lt_user_id].lt_longitude = lt_longitude;
+          users[lt_user_id].lastUpdated = Date.now();
+        }
 
+        // ack back to sender (mobile app)
+        if (ack) {
+          ack({
+            status: "success",
+            message: "Location updated successfully",
+            userId: lt_user_id,
+            lat: lt_latitude,
+            lng: lt_longitude,
+          });
+        }
 
-
-       if (ack) {
-  ack({
-    status: "success",
-    "testing":data,
-    message: "Location updated successfully",
-    userId: lt_user_id,
-    lat: lt_latitude,
-    lng: lt_longitude,
-  });
-}
-
-
-        // // Broadcast to all admins or dashboard clients
-        // io.emit("user-location", {
-        //   lt_user_id,
-        //   lt_name,
-        //   lt_latitude,
-        //   lt_longitude,
-        //   lt_app_time,
-        // });
+        // 🔹 broadcast location update to all dashboards
+        io.emit("user-location", {
+          lt_user_id,
+          lt_name,
+          lt_latitude,
+          lt_longitude,
+          lt_app_time,
+        });
       }
     );
-
-
-
-
-
   } catch (err) {
     console.error("Unexpected Error:", err);
     socket.emit("error-message", { message: "Internal server error" });
   }
-  socket.emit("get-user-location",data)
 });
+
+
+
+
+
 
   // DISCONNECT USER
   // socket.on("disconnect", () => {
