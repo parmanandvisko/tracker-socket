@@ -205,7 +205,18 @@ socket.on("location-update", (data, ack) => {
           });
         }
 
-       
+        // 🔹 broadcast location update to all dashboards
+        io.emit("user-location", {
+          lt_user_id,
+          lt_name,
+          lt_latitude,
+          lt_longitude,
+          lt_app_time,
+          lt_isInternetOn_Off,
+          lt_locationOn_off,
+          lt_location_permission,
+          
+        });
       }
     );
 
@@ -215,18 +226,6 @@ socket.on("location-update", (data, ack) => {
     console.error("Unexpected Error:", err);
     socket.emit("error-message", { message: "Internal server error" });
   }
-
-   // 🔹 broadcast location update to all dashboards
-        io.emit("user-location", {
-          lt_user_id,
-          lt_name,
-          lt_latitude,
-          lt_longitude,
-          lt_app_time,
-          lt_isInternetOn_Off,
-          lt_locationOn_off,
-          lt_location_permission,  
-        });
 });
 
 
