@@ -391,13 +391,13 @@ setInterval(() => {
     d.lt_location_permission,
   ]);
 
-  db.query(sql, [values], (err) => {
-    if (err) {
-      console.error("Batch DB Insert Error:", err);
-    } else {
-      console.log(`Inserted ${values.length} location records`);
-    }
-  });
+  // db.query(sql, [values], (err) => {
+  //   if (err) {
+  //     console.error("Batch DB Insert Error:", err);
+  //   } else {
+  //     console.log(`Inserted ${values.length} location records`);
+  //   }
+  // });
 
   // clear buffer after insert
   locationBuffer = [];
