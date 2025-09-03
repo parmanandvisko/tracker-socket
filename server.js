@@ -261,9 +261,6 @@
 
 
 
-
-
-
 import express from "express";
 import db from "./src/config/dbconnect.js";
 import http from "http";
@@ -284,7 +281,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*", // 👈 allow all, change in prod to specific domain(s)
+    origin: "*", // allow all, change in prod to specific domain(s)
     methods: ["GET", "POST"],
   },
 });
@@ -348,7 +345,7 @@ io.on("connection", (socket) => {
     // Acknowledge back to sender
     if (ack) {
       ack({
-        status: "queued",
+        status: "success",
         message: "Location queued for DB insert",
         userId: lt_user_id,
         lat: lt_latitude,
