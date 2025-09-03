@@ -374,11 +374,11 @@ io.on("connection", (socket) => {
 setInterval(() => {
   if (locationBuffer.length === 0) return;
 
-  const sql = `
-    INSERT INTO location_tracker 
-    (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
-    VALUES ?
-  `;
+  // const sql = `
+  //   INSERT INTO location_tracker 
+  //   (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
+  //   VALUES ?
+  // `;
 
   const values = locationBuffer.map((d) => [
     d.lt_user_id,
