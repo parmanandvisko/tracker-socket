@@ -8,12 +8,10 @@
 
 // dotenv.config();
 // const PORT = process.env.PORT || 5000;
-
 // const app = express();
 // app.use(cors());
 // app.use(express.urlencoded({ extended: true }));
 // app.use(express.json());
-
 // const server = http.createServer(app);
 
 // const io = new Server(server, {
@@ -22,23 +20,15 @@
 //     methods: ["GET", "POST"],
 //   },
 // });
-
+// //===========PARENT-ROUTE START
 // app.use("/api/user/", userRoutes);
+// //===========PARENT-ROUTE END
 
 // const users = {}; // username: socketId
-// console.log(users,"userss")
+
 
 // io.on("connection", (socket) => {
 //   console.log("socket connected",socket.id);
-
-//   // JOIN-USER
-//   // socket.on("join", (username) => {
-//   //   users[username] = socket.id;
-//   //   console.log(users, "users");
-//   //   io.emit("online-users", Object.keys(users));
-//   // });
-
-
 
 //    // JOIN USER
 //   socket.on("join", ({ lt_user_id, lt_name }) => {
@@ -54,102 +44,9 @@
 
 //     console.log("Active Users:", users);
 //     io.emit("online-users", Object.values(users)); // send full object array
-//   });
-
-//   // LOCATION UPDATE
-// //   socket.on("location-update", (data,ack) => {
-// //     console.log(data,"testData")
-// //   try {
-// // //        const data = {
-// // //     "lt_user_id":"85",
-// // //       "lt_name":"demo_demo",
-// // //       "lt_latitude":1.1,
-// // //       "lt_longitude":1.1,
-// // //       "lt_app_time":"12",
-// // //       "lt_isInternetOn_Off":false,
-// // //       "lt_locationOn_off":false,
-// // //       "lt_location_permission":false
-// // // }
-
-// //     const {
-// //       lt_user_id,
-// //       lt_name,
-// //       lt_latitude,
-// //       lt_longitude,
-// //       lt_app_time,
-// //       lt_isInternetOn_Off,
-// //       lt_locationOn_off,
-// //       lt_location_permission,
-// //     } = data;
-
-
-
-// //     console.log("Received Location Data:", data);
-
-// //     const sql = `
-// //       INSERT INTO location_tracker 
-// //       (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
-// //       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-// //     `;
-
-// //     db.query(
-// //       sql,
-// //       [
-// //         lt_user_id,
-// //         lt_name,
-// //         lt_latitude,
-// //         lt_longitude,
-// //         lt_app_time,
-// //         lt_isInternetOn_Off,
-// //         lt_locationOn_off,
-// //         lt_location_permission,
-// //       ],
-// //       (err, result) => {
-// //        if (err) {
-// //   console.error("DB Insert Error:", err);
-// //   if (ack) ack({ status: "error", message: "DB insert failed" });
-// //   return;
-// // }
-
-// //         if (users[lt_user_id]) {
-// //         users[lt_user_id].lt_latitude = lt_latitude;
-// //         users[lt_user_id].lt_longitude = lt_longitude;
-// //         users[lt_user_id].lastUpdated = Date.now();
-// //       }
-
-
-
-// //        if (ack) {
-// //   ack({
-// //     status: "success",
-// //     "testing":data,
-// //     message: "Location updated successfully",
-// //     userId: lt_user_id,
-// //     lat: lt_latitude,
-// //     lng: lt_longitude,
-// //   });
-// // }
-// //         // Broadcast to all admins or dashboard clients
-// //         io.emit("user-location", {
-// //           lt_user_id,
-// //           lt_name,
-// //           lt_latitude,
-// //           lt_longitude,
-// //           lt_app_time,
-// //         });
-// //       }
-// //     );
-
-// //   } catch (err) {
-// //     console.error("Unexpected Error:", err);
-// //     socket.emit("error-message", { message: "Internal server error" });
-// //   }
-// //   socket.emit("get-user-location",data)
-// // });
+//     });
 
 // socket.on("location-update", (data, ack) => {
-
-  
 //   try {
 //     const {
 //       lt_user_id,
@@ -205,7 +102,7 @@
 //           });
 //         }
 
-//         // 🔹 broadcast location update to all dashboards
+//         // broadcast location update to all dashboards
 //         io.emit("user-location", {
 //           lt_user_id,
 //           lt_name,
@@ -215,13 +112,9 @@
 //           lt_isInternetOn_Off,
 //           lt_locationOn_off,
 //           lt_location_permission,
-          
 //         });
 //       }
 //     );
-
-
-
 //   } catch (err) {
 //     console.error("Unexpected Error:", err);
 //     socket.emit("error-message", { message: "Internal server error" });
@@ -229,18 +122,31 @@
 // });
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //   // DISCONNECT USER
-//   // socket.on("disconnect", () => {
-//   //   for (const [username, id] of Object.entries(users)) {
-//   //     if (id === socket.id) {
-//   //       delete users[username];
-//   //       break;
-//   //     }
-//   //   }
-//   //   io.emit("online-users", Object.keys(users));
-//   // });
-
-
 //   socket.on("disconnect", () => {
 //     for (const [user_id, userObj] of Object.entries(users)) {
 //       if (userObj.socketId === socket.id) {
@@ -248,16 +154,72 @@
 //         break;
 //       }
 //     }
-
 //       io.emit("online-users", Object.values(users));
 //     });
-
-
 // });
 
 // server.listen(PORT, () => {
 //   console.log(`Server running on port ${PORT}`);
 // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -281,20 +243,19 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*", // allow all, change in prod to specific domain(s)
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
+//===========PARENT-ROUTE START
 app.use("/api/user/", userRoutes);
+//===========PARENT-ROUTE END
 
-// cache of active users
-const users = {};
-// buffer for batching location inserts
-let locationBuffer = [];
+const users = {}; // Cache of active users
 
 io.on("connection", (socket) => {
-  console.log("Socket connected:", socket.id);
+  console.log("socket connected", socket.id);
 
   // JOIN USER
   socket.on("join", ({ lt_user_id, lt_name }) => {
@@ -303,14 +264,18 @@ io.on("connection", (socket) => {
       lt_name,
       lt_latitude: null,
       lt_longitude: null,
+      lt_app_time: null,
+      lt_isInternetOn_Off: null,
+      lt_locationOn_off: null,
+      lt_location_permission: null,
       lastUpdated: null,
+      lastSavedToDB: null, // track last DB save time
     };
 
-    console.log("Active Users:", Object.keys(users));
     io.emit("online-users", Object.values(users));
   });
 
-  // LOCATION UPDATE (buffered inserts)
+  // LOCATION UPDATE (update cache only, no DB insert)
   socket.on("location-update", (data, ack) => {
     const {
       lt_user_id,
@@ -323,37 +288,28 @@ io.on("connection", (socket) => {
       lt_location_permission,
     } = data;
 
-    // Push into buffer for later DB insert
-    locationBuffer.push({
-      lt_user_id,
-      lt_name,
-      lt_latitude,
-      lt_longitude,
-      lt_app_time,
-      lt_isInternetOn_Off,
-      lt_locationOn_off,
-      lt_location_permission,
-    });
-
-    // Update in-memory cache for live tracking
     if (users[lt_user_id]) {
-      users[lt_user_id].lt_latitude = lt_latitude;
-      users[lt_user_id].lt_longitude = lt_longitude;
-      users[lt_user_id].lastUpdated = Date.now();
+      users[lt_user_id] = {
+        ...users[lt_user_id],
+        lt_name,
+        lt_latitude,
+        lt_longitude,
+        lt_app_time,
+        lt_isInternetOn_Off,
+        lt_locationOn_off,
+        lt_location_permission,
+        lastUpdated: Date.now(),
+      };
     }
 
-    // Acknowledge back to sender
     if (ack) {
       ack({
         status: "success",
-        message: "Location queued for DB insert",
-        userId: lt_user_id,
-        lat: lt_latitude,
-        lng: lt_longitude,
+        message: "Location cached successfully",
       });
     }
 
-    // Broadcast instantly to all dashboards
+    // Broadcast to dashboards immediately
     io.emit("user-location", data);
   });
 
@@ -366,43 +322,50 @@ io.on("connection", (socket) => {
       }
     }
     io.emit("online-users", Object.values(users));
-    console.log("Socket disconnected:", socket.id);
   });
 });
 
-// 🔹 Batch insert every 5 seconds
+// ======================= DB INSERT EVERY 30s =========================
 setInterval(() => {
-  if (locationBuffer.length === 0) return;
+  const now = Date.now();
 
-  // const sql = `
-  //   INSERT INTO location_tracker 
-  //   (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
-  //   VALUES ?
-  // `;
+  for (const [lt_user_id, userObj] of Object.entries(users)) {
+    if (
+      userObj.lt_latitude &&
+      userObj.lt_longitude &&
+      (!userObj.lastSavedToDB || now - userObj.lastSavedToDB >= 30000) // every 30s per user
+    ) {
+      const sql = `
+        INSERT INTO location_tracker 
+        (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `;
+      db.query(
+        sql,
+        [
+          lt_user_id,
+          userObj.lt_name,
+          userObj.lt_latitude,
+          userObj.lt_longitude,
+          userObj.lt_app_time,
+          userObj.lt_isInternetOn_Off,
+          userObj.lt_locationOn_off,
+          userObj.lt_location_permission,
+        ],
+        (err) => {
+          if (err) {
+            console.error("DB Insert Error:", err);
+          } else {
+            users[lt_user_id].lastSavedToDB = now;
+            console.log(`✅ Location saved for user ${lt_user_id}`);
+          }
+        }
+      );
+    }
+  }
+}, 10000); // run check every 10s
 
-  const values = locationBuffer.map((d) => [
-    d.lt_user_id,
-    d.lt_name,
-    d.lt_latitude,
-    d.lt_longitude,
-    d.lt_app_time,
-    d.lt_isInternetOn_Off,
-    d.lt_locationOn_off,
-    d.lt_location_permission,
-  ]);
-
-  // db.query(sql, [values], (err) => {
-  //   if (err) {
-  //     console.error("Batch DB Insert Error:", err);
-  //   } else {
-  //     console.log(`Inserted ${values.length} location records`);
-  //   }
-  // });
-
-  // clear buffer after insert
-  locationBuffer = [];
-}, 5000);
-
+// ======================= START SERVER =========================
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
