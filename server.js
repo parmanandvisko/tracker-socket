@@ -147,11 +147,9 @@ io.on("connection", (socket) => {
 //   socket.emit("get-user-location",data)
 // });
 
-socket.on("location-update", (data, ack) => {
+socket.on("location-update", (data) => {
 
-  
-  try {
-    const {
+  const {
       lt_user_id,
       lt_name,
       lt_latitude,
@@ -162,50 +160,7 @@ socket.on("location-update", (data, ack) => {
       lt_location_permission,
     } = data;
 
-    // Save in DB...
-    const sql = `
-      INSERT INTO location_tracker 
-      (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    db.query(
-      sql,
-      [
-        lt_user_id,
-        lt_name,
-        lt_latitude,
-        lt_longitude,
-        lt_app_time,
-        lt_isInternetOn_Off,
-        lt_locationOn_off,
-        lt_location_permission,
-      ],
-      (err, result) => {
-        if (err) {
-          console.error("DB Insert Error:", err);
-          if (ack) ack({ status: "error", message: "DB insert failed" });
-          return;
-        }
-
-        // update user cache
-        if (users[lt_user_id]) {
-          users[lt_user_id].lt_latitude = lt_latitude;
-          users[lt_user_id].lt_longitude = lt_longitude;
-          users[lt_user_id].lastUpdated = Date.now();
-        }
-
-        // ack back to sender (mobile app)
-        if (ack) {
-          ack({
-            status: "success",
-            message: "Location updated successfully",
-            userId: lt_user_id,
-            lat: lt_latitude,
-            lng: lt_longitude,
-          });
-        }
-
-        // 🔹 broadcast location update to all dashboards
+  // 🔹 broadcast location update to all dashboards
         io.emit("user-location", {
           lt_user_id,
           lt_name,
@@ -217,15 +172,83 @@ socket.on("location-update", (data, ack) => {
           lt_location_permission,
           
         });
-      }
-    );
+  
+  // try {
+  //   const {
+  //     lt_user_id,
+  //     lt_name,
+  //     lt_latitude,
+  //     lt_longitude,
+  //     lt_app_time,
+  //     lt_isInternetOn_Off,
+  //     lt_locationOn_off,
+  //     lt_location_permission,
+  //   } = data;
+
+  //   // Save in DB...
+  //   const sql = `
+  //     INSERT INTO location_tracker 
+  //     (lt_user_id, lt_name, lt_latitude, lt_longitude, lt_app_time, lt_isInternetOn_Off, lt_locationOn_off, lt_location_permission) 
+  //     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  //   `;
+  //   db.query(
+  //     sql,
+  //     [
+  //       lt_user_id,
+  //       lt_name,
+  //       lt_latitude,
+  //       lt_longitude,
+  //       lt_app_time,
+  //       lt_isInternetOn_Off,
+  //       lt_locationOn_off,
+  //       lt_location_permission,
+  //     ],
+  //     (err, result) => {
+  //       if (err) {
+  //         console.error("DB Insert Error:", err);
+  //         if (ack) ack({ status: "error", message: "DB insert failed" });
+  //         return;
+  //       }
+
+  //       // update user cache
+  //       if (users[lt_user_id]) {
+  //         users[lt_user_id].lt_latitude = lt_latitude;
+  //         users[lt_user_id].lt_longitude = lt_longitude;
+  //         users[lt_user_id].lastUpdated = Date.now();
+  //       }
+
+  //       // ack back to sender (mobile app)
+  //       if (ack) {
+  //         ack({
+  //           status: "success",
+  //           message: "Location updated successfully",
+  //           userId: lt_user_id,
+  //           lat: lt_latitude,
+  //           lng: lt_longitude,
+  //         });
+  //       }
+
+  //       // 🔹 broadcast location update to all dashboards
+  //       io.emit("user-location", {
+  //         lt_user_id,
+  //         lt_name,
+  //         lt_latitude,
+  //         lt_longitude,
+  //         lt_app_time,
+  //         lt_isInternetOn_Off,
+  //         lt_locationOn_off,
+  //         lt_location_permission,
+          
+  //       });
+  //     }
+  //   );
 
 
 
-  } catch (err) {
-    console.error("Unexpected Error:", err);
-    socket.emit("error-message", { message: "Internal server error" });
-  }
+  // } catch (err) {
+  //   console.error("Unexpected Error:", err);
+  //   socket.emit("error-message", { message: "Internal server error" });
+  // }
 });
 
 
